@@ -1,5 +1,8 @@
 <template>
     <div class="contacts-list">
+
+        <div class="card-header" style="text-align:center;"  v-if="currentUser.designation=='0'">Chat with Teacher</div>
+         <div class="card-header" style="text-align:center;"  v-else>Chat with Student</div>
         <ul>
             <li v-for="contact in sortedContacts" :key="contact.id" @click="selectContact(contact)" :class="{ 'selected': contact == selected }">
                 <div class="avatar">
@@ -42,6 +45,9 @@
                     }
                     return contact.unread;
                 }]).reverse();
+            },
+            currentUser() {
+                return this.$store.getters.currentUser
             }
         }
     }

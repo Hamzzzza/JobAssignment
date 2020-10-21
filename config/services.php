@@ -18,7 +18,7 @@ return [
     'google' => [
         'client_id' => '6437600041-aelnie3o1icmg1105ecnkcbhk98tugnu.apps.googleusercontent.com',
         'client_secret' => 'b5H2VeHRcP7AKg1-wgDVSWLE',
-        'redirect' => 'http://assignment.com/api/auth/logins',
+        'redirect' => 'http://127.0.0.1/api/auth/logins',
       ],
 
     'mailgun' => [

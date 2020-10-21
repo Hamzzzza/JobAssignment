@@ -21,24 +21,42 @@
                         <template v-if="currentUser.designation=='1'">
                        
                       
+                           
+                         <li>
+                            <router-link to="/teacher/addTask" class="nav-link" >AddTasks</router-link>
+                        </li> 
+
+                        
+                         <li>
+                            <router-link to="/teacher/assignCourse" class="nav-link" >AssignCourse</router-link>
+                        </li>
+
+
                             <li>
                             <router-link to="/teacher/" class="nav-link" >Courses</router-link>
                         </li>
- 
+                        
+               
                            <li>
                             <router-link to="/chat" class="nav-link" >Chat</router-link>
                         </li>
+
+                        
                           </template>
 
-                          
+                            
+
+
+
+
                             <template v-else>
                            <li>
-                            <router-link to="/task/" class="nav-link" >Assignments/tasks</router-link> 
+                            <router-link to="/task/" class="nav-link" >Courses/Tasks</router-link> 
                             
                             <!-- /studentcourses -->
                             </li>
                              <li>
-                            <router-link to="/task/studentcourses" class="nav-link" >StudentCourses</router-link> 
+                            <router-link to="/task/studentcourses" class="nav-link" >MyCourses</router-link> 
                             
                            
                             </li>

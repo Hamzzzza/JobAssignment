@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use Exception;
-use Illuminate\Auth\Events\PasswordReset;
+// use Exception;
+// use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
+//use Laravel\Socialite\Facades\Socialite;
 
 
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+// use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
-use Illuminate\Foundation\Auth\ResetsPasswords;
+// use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class AuthController extends Controller
 {
@@ -23,8 +24,48 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','signup','handleGoogleCallback','redirectToGoogle','forgot','doReset']]);
+        $this->middleware('auth:api', ['except' => ['login','signup','handleGoogleCallback','redirectToGoogle','forgot','doReset','googleLoginRegister']]);
     }
+
+       
+    public function googleLoginRegister()
+    {
+
+            
+            // $user = Socialite::driver('google')->stateless()->user();
+     
+           // $finduser = User::where('google_id', $user->id)->first();
+           $finduser = User::where('email', request()->email)->first();
+     
+            if($finduser){
+                
+                $token = auth('api')->login($finduser);
+              
+                return $this->respondWithToken($token);
+     
+            }else{
+                $newUser = User::create([
+                    'name' => request()->name,
+                    'email' => request()->email,
+                    //'google_id'=> $user->id,
+                    'password' => encrypt('123456dummy')
+                ]);
+                
+                 
+                $token = auth('api')->login($newUser);
+
+                return $this->respondWithToken($token);
+            }
+
+    }
+
+
+
+
+
+
+
+
 
 
     public function signup(Request $request)
@@ -40,23 +81,13 @@ class AuthController extends Controller
 
 
          if($validatedUserData){
-             if($request->has('designation')){
         return User::create([
-            'name' => $request->name,
+            'name' => $request->name ,
             'email' => $request->email,
-            'designation' => '1',
+            'designation' => $request->designation,
             'password' => Hash::make($request->password),
         ]);
-             }
-             else{
-                return User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password)
-                   
-                ]);
-
-             }
+        
 
 
          }
@@ -152,7 +183,6 @@ class AuthController extends Controller
 
 
 
-      
     public function redirectToGoogle()
     {
         //return  Socialite::driver('google')->redirect()->getTargetUrl();
@@ -176,19 +206,10 @@ class AuthController extends Controller
      
             if($finduser){
                 
-               // \Auth::login($finduser);
-
-                //$credentials = [$finduser->email,$finduser->password];
-                $credentials = [
-                    'email' => $finduser->email,
-                    'password' => $finduser->password,
-                    
-                ];
+            
                 
                 $token = auth('api')->login($finduser);
-                // if (! $token = auth('api')->attempt($credentials)) {
-                //     return response()->json(['error' => '1Unauthorized'], 401);
-                // }
+             
 
                 return $this->respondWithToken($token);
      
@@ -200,26 +221,16 @@ class AuthController extends Controller
                     'password' => encrypt('123456dummy')
                 ]);
                 
-               // return $newUser;  
-               // \Auth::login($newUser);
-     
-               
-                //$credentials = [$newUser->email,$newUser->password];
-                
-                // $credentials = [
-                //     'email' => $newUser->email,
-                //     'password' => $newUser->password,
-                    
-                // ];
                  
                 $token = auth('api')->login($newUser);
 
                 return $this->respondWithToken($token);
             }
      
-    }
+          }
     
 
+    
 
 
 

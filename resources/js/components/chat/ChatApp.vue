@@ -25,14 +25,25 @@
         },
         mounted() {
             this.user=this.currentUser;
-            Echo.private(`messages.${this.currentUser.id}`)
+            console.log(this.currentUser.id);
+         
+         Echo.private(`messages.${this.currentUser.id}`)
                 .listen('NewMessage', (e) => {
+                   console.log("Message Recieved")
                     this.hanleIncoming(e.message);
                 });
+
+
+
             axios.get('/api/contacts')
                 .then((response) => {
+                   
                     this.contacts = response.data;
                 });
+
+
+
+
         },
         methods: {
             startConversationWith(contact) {

@@ -1,49 +1,78 @@
 <template>
     <div>
-    
-        <table class="table">
+      <div class="card-header" style="text-align:center;">Course wise Assignments/Tasks</div>
+
+           
+
+         <div id="accordion">
+
+
+          <div class="card"    v-for="task in tasks" :key="task.id">
+            <div class="card-header">
+            <a class="card-link" data-toggle="collapse" href="#collapseOne">
+            <th>Course : <b>{{task.course.name}}</b></th> 
+            <th style="float:right;">Status : {{task.rel}}</th>  
+            </a>
+            </div>
+            <div id="collapseOne" class="collapse show" data-parent="#accordion">
+            <div class="card-body">
+
+                <table class="table" v-if="task.assignment.length">
             <thead>
-                <th>Course</th>
-                <th>Task</th>
-                <th>TaskDescription</th>
-                <th>Due-on</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>DueDate</th>
             </thead>
             <tbody>
-                <template v-if="!tasks.length">
-                    <tr>
-                        <td colspan="4" class="text-center">No Tasks Available</td>
-                    </tr>
-                </template>
-                <template v-else>
-                    <tr v-for="task in tasks" :key="task.id">
-                        <td>{{ task.course.name }}</td>
-                        <td>{{ task.title }}</td>
-                        <td>{{ task.description }}</td>
-                        <td>{{ task.due_date }}</td>
-                        <!-- <td>
-                            <router-link :to="`/tasks/${task.id}`">View task</router-link>
-                        </td> -->
-                    </tr>
-                </template>
-            </tbody>
-        </table>
+                 
+                 <tr v-for="assignment in task.assignment" :key="assignment.id">
+            
+                        <td>{{ assignment.title }}</td>
+                        <td>{{ assignment.description }}</td>
+                        <td>{{ assignment.due_date }}</td>
+
+                        </tr>
+
+                           </tbody>
+                       </table>
+                </div>
+                </div>
+            </div>
+
+
+            </div>
+
+
     </div>
 </template>
 
 <script>
     export default {
         name: 'list',
-        mounted() {
-            // if (this.tasks.length) {
-            //     return;
-            // }
-            
-            this.$store.dispatch('getTasks');
+
+
+        
+        created() {
+
+           axios.get('/api/Assignments')
+            .then((response) => {
+                
+                this.tasks=response.data.assignments;
+             
+
+            })
+        
+        },
+         data() {
+            return {
+              
+                tasks:[]
+            };
         },
         computed: {
-            tasks() {
-                return this.$store.getters.tasks;
-            }
+            // tasks() {
+            //     return this.$store.getters.tasks;
+            // }
         }
     }
 </script>

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Course;
 use App\Assignment;
+use App\Usercourse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,9 +17,12 @@ class CoursesController extends Controller
        // $assignments = Assignment::all();
           
         $courses = Course::all();
+        
+        $students=User::where("designation","0")->get();
 
         return response()->json([
-            "courses" => $courses
+            "courses" => $courses,
+            "students"=>$students
         ], 200);
     }
 
@@ -45,6 +50,42 @@ class CoursesController extends Controller
         ], 200);
     }
 
+
+
+    public function enrollStudent()
+    {
+   
+
+        Course::findOrFail(request()->course_id);
+        User::findOrFail(request()->user_id);
+        
+
+        //dump("working");
+        $enroll = Usercourse::updateOrCreate(request()->all());
+
+        return response()->json([
+            "enroll" => $enroll
+        ], 200);                
+
+    }
+
+
+    public function addAssignment()
+    {
+   
+
+        Course::findOrFail(request()->course_id);
+
+        $assignment = Assignment::create(["course_id"=>request()->course_id, "title"=>request()->title,
+        "description"=>request()->description,"total_marks"=>request()->total_marks,"due_date"=>request()->due_date]);
+
+        return response()->json([
+            "assignment" => $assignment
+        ], 200);    
+
+    }
+
+   
 
 
 

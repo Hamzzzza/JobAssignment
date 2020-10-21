@@ -1,17 +1,19 @@
 <template>
+
     <div class="customer-new">
+         <div class="card-header" style="text-align:center;">ADD New Course</div>
         <form @submit.prevent="add">
             <table class="table">
                 <tr>
                     <th>Name</th>
                     <td>
-                        <input type="text" class="form-control" v-model="course.name" placeholder="Customer Name"/>
+                        <input type="text" class="form-control" v-model="course.name" placeholder="Course Name"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Description</th>
                     <td>
-                        <input type="text" class="form-control" v-model="course.description" placeholder="Customer Description"/>
+                        <input type="text" class="form-control" v-model="course.description" placeholder="Course Description"/>
                     </td>
                 </tr>
                 
@@ -55,7 +57,6 @@
                 this.errors = null;
 
                 const constraints = this.getConstraints();
-
                 const errors = validate(this.$data.course, constraints);
                 if(errors) {
                     this.errors = errors;

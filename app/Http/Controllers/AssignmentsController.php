@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Assignment;
+use App\Usercourse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AssignmentsController extends Controller
 {
@@ -13,7 +15,11 @@ class AssignmentsController extends Controller
     {
        // $assignments = Assignment::all();
           
-        $assignments = Assignment::with('course')->get();
+
+       $assignments=  Usercourse::with('assignment','course')->where("user_id",auth()->id())->get();
+
+        //$assignments = Assignment::with('course')->get();
+          // dd($assignments);
 
         return response()->json([
             "assignments" => $assignments
@@ -28,15 +34,21 @@ class AssignmentsController extends Controller
             "assignment" => $assignment
         ], 200);
     }
+   
 
-    public function new($id)
-    {
-        $assignment = Assignment::create(["coure_id"=>$id, "title"=>request()->title,
-        "description"=>request()->description]);
+    public function studentcourses(){
+    
+     
 
+          $usercourses=  Usercourse::with('course')->where("user_id",auth()->id())->get();
+
+   
+   
         return response()->json([
-            "assignment" => $assignment
+            "usercourses" => $usercourses
         ], 200);
+
     }
+   
 
 }

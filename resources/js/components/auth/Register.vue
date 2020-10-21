@@ -1,4 +1,5 @@
 <template>
+
     <div class="login row justify-content-center">
         <div class="col-md-4">
             <div class="card">
@@ -18,7 +19,12 @@
                             <input type="password" v-model="form.password" class="form-control" placeholder="Password">
                         </div>
                          <div class="form-group row">
-                         <label for="desgination" class="b">Teacher  </label> <input class="a" type="checkbox"  v-model="form.designation" value="1" >
+                         <label for="desgination" class="b">Teacher  </label> 
+                           <input class="a" type="radio"  v-model="form.designation" value="1" >
+                             <label for="desgination" class="k">   Student  </label>
+                           <input class="a" type="radio"  v-model="form.designation" value="0" >
+  
+                       
                         </div>
                         <div class="form-group row">
                             <input type="submit" value="Register" class="btn btn-info btn-block my-4">
@@ -29,37 +35,74 @@
                             </p>
                         </div>
                     </form>
-                     <form @submit.prevent="gmailLogin" >
-                    <div class="form-group row">
-                            <input type="submit" value="Register with Gmail" class="btn btn-info btn-block my-4">
-                        </div>
-                     </form>
+                     <div class="form-group row d">
+                     <button v-google-signin-button="clientId" class="btn btn-info btn-block my-4">Register with Google</button>
+                     </div>
+
+
+                                     <div class="errors" v-if="errors">
+                                                            <ul>
+                                                                <li v-for="(fieldsError, fieldName) in errors" :key="fieldName">
+                                                                    <strong>{{ fieldName }}</strong> {{ fieldsError.join('\n') }}
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                 </div>
             </div>
         </div>
+
+
+   
+    
+
     </div>
+
+   
+
+
 </template>
 
 <script>
     import {register} from '../../helpers/auth';
+    import {googleLoginRegister} from '../../helpers/auth';
+    import {setToken} from '../../helpers/auth';
+    import GoogleSignInButton from 'vue-google-signin-button-directive';
 
+    import validate from 'validate.js';
     export default {
         name: "register",
+
+         directives: {
+    GoogleSignInButton
+          },
         data() {
             return {
                 form: {
                     name:'',
                     email: '',
                     password: '',
-                    designation:"0"
+                    designation:'0'
 
                 },
-                error: null
+                clientId: '6437600041-aelnie3o1icmg1105ecnkcbhk98tugnu.apps.googleusercontent.com',
+                errors: null
             };
         },
+
         methods: {
             authenticate() {
                 
+                
+               
+                this.errors = null;
+
+                const constraints = this.getConstraints();
+                const errors = validate(this.$data.form, constraints);
+                if(errors) {
+                    this.errors = errors;
+                    return;
+                }
+
                 register(this.$data.form)
                     .then((res) => {
                          alert("User Registered plz login");
@@ -74,25 +117,80 @@
             },
 
 
-            gmailLogin() {
-            //const newWindow = openWindow('', 'message')
-              axios.get('/api/auth/google')
-                    .then(response => {
 
-                        if(response.data.url){
-                      window.location.href = response.data.url;
-                        }
-                        
+              OnGoogleAuthSuccess (idToken) {
+                        // Receive the idToken and make your magic with the backend
                        
 
-                    }).then(res=>{
-                            console.log(this.$route.query.code);
-                    })
-                    .catch(function (error) {
-                      console.error(error);
-                    });
+
+
+                        googleLoginRegister(idToken)
+                        .then((res) => {
+                        
+                               this.form.name=res.name;
+                               this.form.email=res.email;
+                                this.form.password="secretsecret";
+
+                                  axios.post('/api/auth/googlelogin', this.form)
+                                    .then((response) => {
+                                       this.$store.dispatch('login');
+                                       setToken(response.data.access_token);
+                                       this.$store.commit("loginSuccess", response.data);
+                                       //alert("Registration Successfull")
+                                       this.$router.push({path: '/'});
+                                       
+                                    })
+                                    .catch((err) =>{
+                                        
+                                        console.log("Wrong Credentials");
+                                    })
+
+                            })
+                            .catch((error) => {
+                           
+                                this.$store.commit("wrong credentials", {error});
+                            });
+
+
+
+
                         },
 
+
+                        OnGoogleAuthFail (error) {
+                        console.log(error)
+                        },
+                        
+        
+
+             getConstraints() {
+                return {
+                    name: {
+                        presence: true,
+                        length: {
+                            minimum: 5,
+                            message: 'Must be at least 5 characters long'
+                        },
+                    },
+                      email: {
+                        presence: true,
+                    },
+                  
+                   password: {
+                        presence: true,
+                         length: {
+                            minimum: 9,
+                            message: 'Must be at least 9 characters long'
+                        },
+                    }
+
+
+                };
+                },
+
+
+
+               
 
                         
         },
@@ -114,6 +212,12 @@
 }
 .b{
     margin-right: 1rem;
+}
+.d{
+    margin-top:-3rem;
+}.k{
+    margin-left: 5px;
+     margin-right: 1rem;
 }
 </style>
 

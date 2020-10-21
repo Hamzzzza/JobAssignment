@@ -29,6 +29,7 @@
                     contact_id: this.contact.id,
                     text: text
                 }).then((response) => {
+                   
                     this.$emit('new', response.data);
                 })
             }

@@ -14,6 +14,11 @@ import TeacherMain from './components/teacher/TeacherMain.vue';
 import CourseList from './components/teacher/CourseList.vue';
 import NewCourse from './components/teacher/NewCourse.vue';
 import AssignmentView from './components/teacher/AssignmentView.vue';
+import AssignCourse from './components/teacher/AssignCourse.vue';
+import AddTask from './components/teacher/AddTask.vue';
+
+
+
 //import CourseAssignment from './components/students/View.vue';
 //import NewCustomer from './components/students/New.vue';
 
@@ -42,7 +47,7 @@ export const routes=[
         component:Register
     },
     {
-       path:'/api/auth/logins',
+       path:'/api/auth/logins:code',
        name:'LoginGmail',
        component:LoginGmail,
     //    props: (route) => ({ foo: route.query.code }) 
@@ -92,7 +97,16 @@ export const routes=[
                 {
                     path: '/teacher/tasks/:id',
                     component: AssignmentView
+                },
+                {
+                    path: '/teacher/assignCourse',
+                    component: AssignCourse
+                },
+                {
+                    path: '/teacher/addTask',
+                    component: AddTask
                 }
+
          
         ]
 

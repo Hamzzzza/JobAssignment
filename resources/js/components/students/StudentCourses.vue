@@ -1,21 +1,22 @@
 <template>
     <div>
-  
+        <div class="card-header" style="text-align:center;">Enrolled Courses</div>
+
         <table class="table">
             <thead>
                 <th>name</th>
                 <th>description</th>
             </thead>
             <tbody>
-                <template v-if="!courses.length">
+                <template v-if="!usercourses">
                     <tr>
-                        <td colspan="4" class="text-center">No courses</td>
+                        <td colspan="4" class="text-center">Enrolled in None Courses</td>
                     </tr>
                 </template>
                 <template v-else>
-                    <tr v-for="course in courses" :key="course.id">
-                        <td>{{ course.name }}</td>
-                        <td>{{ course.description }}</td>
+                    <tr v-for="usercourse in usercourses" :key="usercourse.id">
+                        <td>{{ usercourse.course.name }}</td>
+                        <td>{{ usercourse.course.description }}</td>
                     </tr>
                 </template>
             </tbody>
@@ -29,18 +30,34 @@
     export default {
 
         name: 'StudentCourses',
+
+
+           created() {
+             
+           axios.get('/api/Assignments/stdcourse')
+            .then((response) => {
+              
+                this.usercourses=response.data.usercourses;
+              
+              //  context.commit('updateTasks', response.data.assignments);
+            })
+           },
         mounted() {
-            
+       
             // if (this.courses.length) {
             //     return;
             // }
             
-            this.$store.dispatch('getCourses');
+           // this.$store.dispatch('getCourses');
+        },
+        data(){
+            return{
+                       usercourses:[]
+
+            };
         },
         computed: {
-            courses() {
-                return this.$store.getters.courses;
-            }
+  
         }
     }
 </script>

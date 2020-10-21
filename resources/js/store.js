@@ -68,6 +68,7 @@ export default {
             state.loading = false;
             state.currentUser = Object.assign({}, payload.user, {token: payload.access_token});
 
+            localStorage.setItem("jwtToken",payload.access_token);
             localStorage.setItem("user", JSON.stringify(state.currentUser));
         },
         loginFailed(state, payload) {
@@ -76,6 +77,7 @@ export default {
         },
         logout(state) {
             localStorage.removeItem("user");
+            localStorage.removeItem("jwtToken");
             state.isLoggedIn = false;
             state.currentUser = null;
         },
@@ -122,6 +124,7 @@ export default {
                 }
             })
             .then((response) => {
+                console.log(response.data)
                 context.commit('updateTasks', response.data.assignments);
             })
         },
@@ -136,6 +139,7 @@ export default {
                 }
             })
             .then((response) => {
+                console.log(response.data)
                 context.commit('updateCourses', response.data.courses);
             })
         }

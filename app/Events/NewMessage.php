@@ -15,7 +15,7 @@ class NewMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
        
-    
+
 
     public $message;
     /**
@@ -35,10 +35,18 @@ class NewMessage implements ShouldBroadcast
      * @return \Illuminate\Broadcasting\Channel|array
      */
     public function broadcastOn()
-    {
+    {        //`messages.${this.currentUser.id}`
+        
         return new PrivateChannel('messages.' . $this->message->to);
-    }
 
+        // return new Channel('plchat');
+
+    }
+    
+    // public function broadcastAs()
+    // {
+    //     return 'NewMessage';
+    // }
 
     public function broadcastWith()
     {

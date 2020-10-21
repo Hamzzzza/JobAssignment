@@ -26,6 +26,16 @@ mode:'history',
 });
 
 
+
+// axios.defaults.headers.common['Content-Type'] = 'application/json';
+// axios.defaults.headers.common['Access-Control-Allow-Credentials'] = 'true';
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, DELETE, PUT, OPTIONS';
+// axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With';
+// axios.defaults.withCredentials = true;
+//axios.defaults.headers.common['Access-Control-Allow-Headers'] = '*';
+//axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
+
 initialize(store, router);
 
 

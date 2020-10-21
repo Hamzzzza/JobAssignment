@@ -18,7 +18,7 @@ class CreateAssignmentTable extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->unsignedInteger('total_marks')->default('10');
-            $table->date('due_date');
+            $table->date('due_date')->nullable();
             $table->timestamps();
         });
     }

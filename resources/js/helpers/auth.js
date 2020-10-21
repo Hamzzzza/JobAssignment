@@ -30,6 +30,34 @@ export function register(credentials) {
     })
 }
 
+
+
+
+export function setToken(credentials){
+    setAuthorization(credentials);
+}
+
+
+export function googleLoginRegister(credentials){
+    return new Promise((res, rej) => {
+        axios.get(`https://cors-anywhere.herokuapp.com/https://oauth2.googleapis.com/tokeninfo?id_token=${credentials}` )
+            .then((response) => {
+                
+                res(response.data);
+            })
+            .catch((err) =>{
+                alet("Oops try again")
+                rej("Wrong token");
+            })
+    })
+
+}
+
+
+
+
+
+
 export function getLocalUser() {
     const userStr = localStorage.getItem("user");
 

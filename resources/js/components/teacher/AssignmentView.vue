@@ -1,11 +1,8 @@
 <template>
     <div class="customer-view" >
-        <!-- <div class="user-img">
-            <img src="https://www.scottsdaleazestateplanning.com/wp-content/uploads/2018/01/user.png" alt="">
-        </div> -->
    
 
-        <div class="user-info" v-if="course">
+        <div class="user-info l" v-if="course">
             <table class="table">
                 <tr>
                     <th>CourseName</th>
@@ -22,59 +19,26 @@
 
 
 
-              
 
-              <div class="customer-new">
-        <form @submit.prevent="add">
-            <table class="table">
-                <tr>
-                    <th>Task title</th>
-                    <td>
-                        <input type="text" class="form-control" v-model="assignment.title" placeholder="Task Title"/>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Task Description</th>
-                    <td>
-                        <input type="text" class="form-control" v-model="assignment.description" placeholder="Task Description"/>
-                    </td>
-                </tr>
-            
-                
-                <tr>
-                 
-                    <td class="text-right">
-                        <input type="submit" value="CreateTask" class="btn btn-info btn-block my-4 f">
-                    </td>
-                </tr>
-            </table>
-        </form>
+          
 
-        </div>
-
-
-
-
-
-
-
-
-
-
-
+          <div class="card-header j" style="text-align:center;">CourseTask</div>
            <table class="table" v-if="tasks" >
             <thead>
               
                 <th>Title</th>
                 <th>Description</th>
+                 <th>Due_Date</th>
+                  <th>Total_Marks</th>
             </thead>
             <tbody>
                <tr v-for="task in tasks" :key="task.id">
                         <td>{{ task.title }}</td>
                         <td>{{ task.description }}</td>
-                        <!-- <td>
-                            <router-link :to="`/tasks/${task.id}`">View task</router-link>
-                        </td> -->
+                        <td>{{ task.due_date }}</td>
+                        <td>{{ task.total_marks }}</td>
+                            <!-- <router-link :to="`/tasks/${task.id}`">Delete</router-link> -->
+                       
                     </tr>
                 </tbody>
             </table>
@@ -109,6 +73,7 @@
                 })
                     .then((response) => {
                         this.course = response.data.course
+                      
                     });
             
 
@@ -133,7 +98,11 @@
             add() {
                 
 
-                axios.post(`/api/Courses/newTask/${this.$route.params.id}`, this.$data.assignment  )
+                axios.post('/api/Courses/newTask', this.assignment,{
+                headers:{
+                    "Authorization":`Bearer ${this.currentUser.token}`
+                }
+                }  )
                     .then((response) => {
                         alert("task added");
                         this.$router.push('/teacher');
@@ -145,11 +114,7 @@
 
         data() {
             return {
-                assignment: {
-                     
-                    title: '',
-                    description: '',
-                },
+               
                 course: null,
                 tasks:[]
             };
@@ -157,9 +122,6 @@
         computed: {
             currentUser() {
                 return this.$store.getters.currentUser;
-            },
-            courses() {
-                return this.$store.getters.courses;
             }
         }
     }
@@ -185,5 +147,10 @@
 }.f{
     
    margin-left: 7rem;
+}.j{
+    margin-top:5rem;
+}
+.l{
+    margin-bottom: 5rem;
 }
 </style>

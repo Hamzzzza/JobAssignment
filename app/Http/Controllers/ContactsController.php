@@ -6,8 +6,8 @@ use App\User;
 use App\Message;
 use App\Events\NewMessage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\Auth;
 
 class ContactsController extends Controller
 {
@@ -17,13 +17,15 @@ class ContactsController extends Controller
     public function get()
     {
         // get all users except the authenticated one
-        if( auth('api')->user()->designation=='0') {   
-        $contacts = User::where('id', '!=', auth()->id())->orWhere('designation','1')->get();
+       $user= auth()->user();
+
+        if( $user->designation=="0") {   
+        $contacts = User::where('id', '!=', auth()->id())->Where('designation','1')->get();
         }
 
         else
         {
-        $contacts = User::where('id', '!=', auth()->id())->orWhere('designation','2')->get();
+        $contacts = User::where('id', '!=', auth()->id())->Where('designation','0')->get();
         }
 
         // get a collection of items where sender_id is the user who sent us a message
@@ -53,20 +55,19 @@ class ContactsController extends Controller
         Message::where('from', $id)->where('to', auth()->id())->update(['read' => true]);
 
         // get all messages between the authenticated user and the selected user
-        // $messages = Message::where(function($q) use ($id) {
-        //     $q->where('from', auth()->id());
-        //     $q->where('to', $id);
-        // })->orWhere(function($q) use ($id) {
-        //     $q->where('from', $id);
-        //     $q->where('to', auth()->id());
-        // })
-        // ->get();
-
-
-        $messages = Message::where(['from'=> auth()->id(), 'to'=> $id])
-        ->orWhere(function($query) use($id){
-            $query->where(['from' => $id, 'to' => auth()->id()]);
+        $messages = Message::where(function($q) use ($id) {
+            $q->where('from', auth()->id());
+            $q->where('to', $id);
+        })->orWhere(function($q) use ($id) {
+            $q->where('from', $id);
+            $q->where('to', auth()->id());
         })->get();
+
+
+        // $messages = Message::where(['from'=> auth()->id(), 'to'=> $id])
+        // ->orWhere(function($query) use($id){
+        //     $query->where(['from' => $id, 'to' => auth()->id()]);
+        // })->get();
 
         return response()->json($messages);
 
@@ -80,7 +81,7 @@ class ContactsController extends Controller
             'text' => $request->text
         ]);
 
-        broadcast(new NewMessage($message));
+        broadcast(new NewMessage($message))->toOthers();
 
         return response()->json($message);
     }
