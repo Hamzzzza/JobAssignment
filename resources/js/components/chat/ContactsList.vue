@@ -5,6 +5,10 @@
          <div class="card-header" style="text-align:center;"  v-else>Chat with Student</div>
         <ul>
             <li v-for="contact in sortedContacts" :key="contact.id" @click="selectContact(contact)" :class="{ 'selected': contact == selected }">
+               
+           
+
+                
                 <div class="avatar">
                     <!-- <img :src="contact.profile_image" :alt="contact.name"> -->
                 </div>
@@ -13,6 +17,10 @@
                     <p class="email">{{ contact.email }}</p>
                 </div>
                 <span class="unread" v-if="contact.unread">{{ contact.unread }}</span>
+                
+
+
+                         
             </li>
         </ul>
     </div>

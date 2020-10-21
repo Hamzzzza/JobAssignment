@@ -81,7 +81,7 @@ class ContactsController extends Controller
             'text' => $request->text
         ]);
 
-        broadcast(new NewMessage($message))->toOthers();
+        broadcast(new NewMessage($message));
 
         return response()->json($message);
     }
