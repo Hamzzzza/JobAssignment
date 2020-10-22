@@ -129,7 +129,10 @@
                                        
                                     })
                                     .catch((err) =>{
-                                        console.log("Wrong Credentials");
+
+                                        console.log("Wrong Credentials plz register first");
+                                        alert('Wrong Credentials plz register first')
+                                         this.$router.push({path: '/register'});
                                     })
 
                             })

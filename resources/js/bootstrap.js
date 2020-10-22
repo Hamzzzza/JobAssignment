@@ -27,7 +27,7 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: "73af0a7e3573ca356c40",
     cluster: "ap2",
-    encrypted: true,
+   // encrypted: true,
     forceTLS: true,
     auth: {
       headers: {

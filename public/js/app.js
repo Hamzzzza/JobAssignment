@@ -2278,7 +2278,12 @@ __webpack_require__.r(__webpack_exports__);
             path: '/'
           });
         })["catch"](function (err) {
-          console.log("Wrong Credentials");
+          console.log("Wrong Credentials plz register first");
+          alert('Wrong Credentials plz register first');
+
+          _this2.$router.push({
+            path: '/register'
+          });
         });
       })["catch"](function (error) {
         _this2.$store.commit("wrong credentials", {
@@ -66590,7 +66595,7 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "73af0a7e3573ca356c40",
   cluster: "ap2",
-  encrypted: true,
+  // encrypted: true,
   forceTLS: true,
   auth: {
     headers: {
